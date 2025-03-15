@@ -29,6 +29,7 @@ char **load_dictionary(char *filename, int *word_count)
     int i = 0;
     while (fgets(buffer, MAX_WORD_LEN, file)) {
         buffer[strcspn(buffer, "\n")] = '\0';
+        buffer[strcspn(buffer, "\r")] = '\0';
         dictionary[i] = malloc(strlen(buffer) + 1);
         strcpy(dictionary[i], buffer);
         i++;
@@ -40,6 +41,7 @@ char **load_dictionary(char *filename, int *word_count)
 }
 
 int is_word_in_dictionary(const char *word, char **dictionary, int word_count) {
+    // simple sequential search string matching algorithm
     printf("Searching for word: '%s'\n", word);
     for (int i = 0; i < word_count; i++) {
         
@@ -51,6 +53,7 @@ int is_word_in_dictionary(const char *word, char **dictionary, int word_count) {
 
 int main()
 {
+    // path to dictionary
     char dictionary_path[1024]="/home/ogbi/dev/c_cpp/projects/spellchecker/words.txt";
     char word[20];
     int count;
