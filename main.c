@@ -51,6 +51,41 @@ int is_word_in_dictionary(const char *word, char **dictionary, int word_count) {
     return 0;
 }
 
+int min(int a, int b, int c) {
+    int m = a < b ? a : b;
+    return m < c ? m : c;
+}
+
+int levenshtein_distance(const char *s, const char *t) {
+    int ls = strlen(s), lt = strlen(t);
+    int **d = malloc((ls + 1) * sizeof(int *));
+    for (int i = 0; i <= ls; i++)
+        d[i] = malloc((lt + 1) * sizeof(int));
+    
+    for (int i = 0; i <= ls; i++)
+        d[i][0] = i;
+    for (int j = 0; j <= lt; j++)
+        d[0][j] = j;
+    
+    for (int i = 1; i <= ls; i++) {
+        for (int j = 1; j <= lt; j++) {
+            int cost = (s[i - 1] == t[j - 1]) ? 0 : 1;
+            d[i][j] = min(d[i - 1][j] + 1,     // deletion
+                          d[i][j - 1] + 1,     // insertion
+                          d[i - 1][j - 1] + cost); // substitution
+        }
+    }
+    
+    int distance = d[ls][lt];
+    
+    // Free the allocated memory.
+    for (int i = 0; i <= ls; i++)
+        free(d[i]);
+    free(d);
+    
+    return distance;
+}
+
 int main()
 {
     // path to dictionary
